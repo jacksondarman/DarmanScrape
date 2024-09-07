@@ -1,0 +1,5 @@
+.env
+*.json
+.vscode/
+go.sum
+.test

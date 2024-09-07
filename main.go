@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -40,7 +39,9 @@ func main() {
 		log.Fatalf("Unable to retrieve Google Doc: %v", err)
 	}
 
-	fmt.Println(extractText(doc.Body.Content))
+	text := extractText(doc.Body.Content)
+	parser(text)
+
 }
 
 func extractText(elements []*docs.StructuralElement) string {

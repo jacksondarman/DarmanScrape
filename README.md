@@ -1,8 +1,8 @@
-# DarmanScrape
+# LekScrape
 
 ## What is it?
 
-Google Docs scraping utility designed to grab and organize the LekMod Master List of Civilizations Google Doc for easy storage in PocketBase. Mainly used in order to assist with developing [DarmanBot](https://github.com/jacksondarman/darmanbot).
+Google Docs scraping utility designed to grab and organize the LekMod Master List of Civilizations Google Doc for easy storage in PocketBase. Mainly used in order to assist with developing [LekBot](https://github.com/jacksondarman/lekbot).
 
 ## How do I run it?
 

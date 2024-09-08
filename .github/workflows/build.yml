@@ -65,3 +65,7 @@ jobs:
       - name: Go Test
         if: ${{ !inputs.skipTests }}
         run: go test -v -count=1 -race -shuffle=on -coverprofile=coverage.txt ./...
+
+      - name: Go Benchmark
+        if: ${{ !inputs.skipTests }}
+        run: go test -v -shuffle=on -run=- -bench=. -benchtime=1x ./...

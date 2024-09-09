@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"regexp"
 	"strings"
 )
@@ -49,7 +49,13 @@ const (
 	Reset = "\033[0m"
 )
 
-func parser(text string) {
+/**
+ * parseCivilizations parses the given text to extract information about Civilizations.
+ * First, this function uses regular expressions to separate the text into "blocks" (each block corresponds to a Civilization)
+ * Then, this function uses regular expressions to define various attributes of Civilizations within the Civilization struct.
+ * The function returns a slice of Civilization structs containing the extracted data.
+ */
+func parseCivilizations(text string) []Civilization {
 	// Regex to match each civilization block
 	civBlockRegex := regexp.MustCompile(`(?m)^([^\n]+- [^\n]+)\n((?:.*\n)*?)^Bias: (.*)$`)
 	blocks := civBlockRegex.FindAllStringSubmatch(text, -1)
@@ -132,27 +138,8 @@ func parser(text string) {
 
 		// Append to civilizations slice
 		civilizations = append(civilizations, civ)
+		log.Printf("Grabbed data for %s", civ.Name)
 	}
 
-	// Print all extracted civilizations
-	for _, civ := range civilizations {
-		fmt.Printf("%sCivilization:%s %s\n", Red, Reset, civ.Name)
-		fmt.Printf("%sLeader:%s %s\n", Red, Reset, civ.Leader)
-		fmt.Printf("%sAbility:%s %s - %s\n", Red, Reset, civ.UAbility.Name, civ.UAbility.Effect)
-
-		if len(civ.UGreatPerson.Name) > 0 {
-			fmt.Printf("%sGreat Person:%s %s - %s\n", Red, Reset, civ.UGreatPerson.Name, civ.UGreatPerson.Effect)
-		}
-
-		for _, imp := range civ.UImprovements {
-			fmt.Printf("%sImprovement:%s %s - %s\n", Red, Reset, imp.Name, imp.Effect)
-		}
-		for _, bld := range civ.UBuildings {
-			fmt.Printf("%sBuilding:%s %s - %s\n", Red, Reset, bld.Name, bld.Effect)
-		}
-		for _, unit := range civ.UUnits {
-			fmt.Printf("%sUnique Unit:%s %s - %s\n", Red, Reset, unit.Name, unit.Effect)
-		}
-		fmt.Printf("%sBias:%s %s\n\n", Red, Reset, civ.Bias)
-	}
+	return civilizations
 }

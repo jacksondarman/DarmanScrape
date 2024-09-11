@@ -9,39 +9,24 @@ import (
 type Civilization struct {
 	Name          string
 	Leader        string
-	UAbility      Ability
+	UAbility      []Ability
 	UBuildings    []Building
 	UImprovements []Improvement
 	UUnits        []Unit
-	UGreatPerson  GreatPerson
+	UGreatPerson  []GreatPerson
 	Bias          string
 }
 
-type Ability struct {
+type CivAttribute struct {
 	Name   string
 	Effect string
 }
 
-type Building struct {
-	Name   string
-	Effect string
-}
-
-type Unit struct {
-	Name       string
-	Effect     string
-	Promotions []string
-}
-
-type Improvement struct {
-	Name   string
-	Effect string
-}
-
-type GreatPerson struct {
-	Name   string
-	Effect string
-}
+type Ability CivAttribute
+type Building CivAttribute
+type Improvement CivAttribute
+type Unit CivAttribute
+type GreatPerson CivAttribute
 
 // ANSI color codes
 const (
@@ -49,12 +34,17 @@ const (
 	Reset = "\033[0m"
 )
 
-/**
- * parseCivilizations parses the given text to extract information about Civilizations.
- * First, this function uses regular expressions to separate the text into "blocks" (each block corresponds to a Civilization)
- * Then, this function uses regular expressions to define various attributes of Civilizations within the Civilization struct.
- * The function returns a slice of Civilization structs containing the extracted data.
- */
+/*
+*
+
+  - parseCivilizations parses the given text to extract information about Civilizations.
+
+  - First, this function uses regular expressions to separate the text into "blocks" (each block corresponds to a Civilization)
+
+  - Then, this function uses regular expressions to define various attributes of Civilizations within the Civilization struct.
+
+  - The function returns a slice of Civilization structs containing the extracted data.
+*/
 func parseCivilizations(text string) []Civilization {
 	// Regex to match each civilization block
 	civBlockRegex := regexp.MustCompile(`(?m)^([^\n]+- [^\n]+)\n((?:.*\n)*?)^Bias: (.*)$`)
@@ -84,29 +74,36 @@ func parseCivilizations(text string) []Civilization {
 			Name:          strings.TrimSpace(civHeaderParts[0]),
 			Leader:        strings.TrimSpace(civHeaderParts[1]),
 			Bias:          strings.TrimSpace(bias),
+			UAbility:      []Ability{},
 			UImprovements: []Improvement{},
 			UBuildings:    []Building{},
 			UUnits:        []Unit{},
-			UGreatPerson:  GreatPerson{},
+			UGreatPerson:  []GreatPerson{},
 		}
 
-		// Extract Ability
-		if abilityMatches := abilityRegex.FindStringSubmatch(civBody); len(abilityMatches) > 2 {
-			civ.UAbility = Ability{
-				Name:   strings.TrimSpace(abilityMatches[1]),
-				Effect: strings.TrimSpace(abilityMatches[2]),
+		log.Printf("New Civilization %s found with leader %s\n", Red+civ.Name+Reset, Red+civ.Leader+Reset)
+
+		// Extract Abilities
+		for _, match := range abilityRegex.FindAllStringSubmatch(civBody, -1) {
+			if len(match) > 2 {
+				civ.UAbility = append(civ.UAbility, Ability{
+					Name:   strings.TrimSpace(match[1]),
+					Effect: strings.TrimSpace(match[2]),
+				})
 			}
 		}
 
-		// Extract Great Person
-		if greatPersonMatches := greatPersonRegex.FindStringSubmatch(civBody); len(greatPersonMatches) > 2 {
-			civ.UGreatPerson = GreatPerson{
-				Name:   strings.TrimSpace(greatPersonMatches[1]),
-				Effect: strings.TrimSpace(greatPersonMatches[2]),
+		// Extract Great People
+		for _, match := range greatPersonRegex.FindAllStringSubmatch(civBody, -1) {
+			if len(match) > 2 {
+				civ.UGreatPerson = append(civ.UGreatPerson, GreatPerson{
+					Name:   strings.TrimSpace(match[1]),
+					Effect: strings.TrimSpace(match[2]),
+				})
 			}
 		}
 
-		// Extract Improvement
+		// Extract Improvements
 		for _, match := range improvementRegex.FindAllStringSubmatch(civBody, -1) {
 			if len(match) > 2 {
 				civ.UImprovements = append(civ.UImprovements, Improvement{
@@ -138,7 +135,6 @@ func parseCivilizations(text string) []Civilization {
 
 		// Append to civilizations slice
 		civilizations = append(civilizations, civ)
-		log.Printf("Grabbed data for %s", civ.Name)
 	}
 
 	return civilizations

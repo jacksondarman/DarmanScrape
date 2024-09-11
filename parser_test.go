@@ -11,29 +11,16 @@ func TestParseCivilizationsWellFormedInput(t *testing.T) {
 
 	expected := []Civilization{
 		{
-			Name:   "Rome",
-			Leader: "Julius Caesar",
-			Bias:   "Coastal",
-			UAbility: Ability{
-				Name:   "Roman Legions",
-				Effect: "Can build roads",
-			},
-			UImprovements: []Improvement{
-				{Name: "Aqueduct", Effect: "Provides fresh water"},
-			},
-			UBuildings: []Building{
-				{Name: "Colosseum", Effect: "Increases happiness"},
-			},
-			UUnits: []Unit{
-				{Name: "Legion", Effect: "Stronger than swordsman"},
-			},
-			UGreatPerson: GreatPerson{
-				Name:   "Augustus",
-				Effect: "Increases culture",
-			},
+			Name:          "Rome",
+			Leader:        "Julius Caesar",
+			Bias:          "Coastal",
+			UAbility:      []Ability{{Name: "Roman Legions", Effect: "Can build roads"}},
+			UImprovements: []Improvement{{Name: "Aqueduct", Effect: "Provides fresh water"}},
+			UBuildings:    []Building{{Name: "Colosseum", Effect: "Increases happiness"}},
+			UUnits:        []Unit{{Name: "Legion", Effect: "Stronger than swordsman"}},
+			UGreatPerson:  []GreatPerson{{Name: "Augustus", Effect: "Increases culture"}},
 		},
 	}
-
 	result := parseCivilizations(text)
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Expected %v, but got %v", expected, result)
@@ -46,17 +33,14 @@ func TestParseCivilizationsMissingBlocks(t *testing.T) {
 
 	expected := []Civilization{
 		{
-			Name:   "Rome",
-			Leader: "Julius Caesar",
-			Bias:   "Coastal",
-			UAbility: Ability{
-				Name:   "Roman Legions",
-				Effect: "Can build roads",
-			},
+			Name:          "Rome",
+			Leader:        "Julius Caesar",
+			Bias:          "Coastal",
+			UAbility:      []Ability{{Name: "Roman Legions", Effect: "Can build roads"}},
 			UImprovements: []Improvement{},
 			UBuildings:    []Building{},
 			UUnits:        []Unit{},
-			UGreatPerson:  GreatPerson{},
+			UGreatPerson:  []GreatPerson{},
 		},
 	}
 

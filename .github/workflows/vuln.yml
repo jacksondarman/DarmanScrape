@@ -27,7 +27,7 @@ jobs:
           check-latest: true
 
       - name: Install Go Dependencies
-        run: go get github.com/jacksondarman/lekscrape
+        run: go get ./...
 
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest

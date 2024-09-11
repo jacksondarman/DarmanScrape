@@ -9,11 +9,11 @@ import (
 type Civilization struct {
 	Name          string
 	Leader        string
-	UAbility      []CivAttribute
-	UBuildings    []CivAttribute
-	UImprovements []CivAttribute
-	UUnits        []CivAttribute
-	UGreatPerson  []CivAttribute
+	UAbility      []Ability
+	UBuildings    []Building
+	UImprovements []Improvement
+	UUnits        []Unit
+	UGreatPerson  []GreatPerson
 	Bias          string
 }
 
@@ -21,6 +21,12 @@ type CivAttribute struct {
 	Name   string
 	Effect string
 }
+
+type Ability CivAttribute
+type Building CivAttribute
+type Improvement CivAttribute
+type Unit CivAttribute
+type GreatPerson CivAttribute
 
 // ANSI color codes
 const (
@@ -68,11 +74,11 @@ func parseCivilizations(text string) []Civilization {
 			Name:          strings.TrimSpace(civHeaderParts[0]),
 			Leader:        strings.TrimSpace(civHeaderParts[1]),
 			Bias:          strings.TrimSpace(bias),
-			UAbility:      []CivAttribute{},
-			UImprovements: []CivAttribute{},
-			UBuildings:    []CivAttribute{},
-			UUnits:        []CivAttribute{},
-			UGreatPerson:  []CivAttribute{},
+			UAbility:      []Ability{},
+			UImprovements: []Improvement{},
+			UBuildings:    []Building{},
+			UUnits:        []Unit{},
+			UGreatPerson:  []GreatPerson{},
 		}
 
 		log.Printf("New Civilization %s found with leader %s\n", Red+civ.Name+Reset, Red+civ.Leader+Reset)
@@ -80,7 +86,7 @@ func parseCivilizations(text string) []Civilization {
 		// Extract Abilities
 		for _, match := range abilityRegex.FindAllStringSubmatch(civBody, -1) {
 			if len(match) > 2 {
-				civ.UAbility = append(civ.UAbility, CivAttribute{
+				civ.UAbility = append(civ.UAbility, Ability{
 					Name:   strings.TrimSpace(match[1]),
 					Effect: strings.TrimSpace(match[2]),
 				})
@@ -90,7 +96,7 @@ func parseCivilizations(text string) []Civilization {
 		// Extract Great People
 		for _, match := range greatPersonRegex.FindAllStringSubmatch(civBody, -1) {
 			if len(match) > 2 {
-				civ.UGreatPerson = append(civ.UGreatPerson, CivAttribute{
+				civ.UGreatPerson = append(civ.UGreatPerson, GreatPerson{
 					Name:   strings.TrimSpace(match[1]),
 					Effect: strings.TrimSpace(match[2]),
 				})
@@ -100,7 +106,7 @@ func parseCivilizations(text string) []Civilization {
 		// Extract Improvements
 		for _, match := range improvementRegex.FindAllStringSubmatch(civBody, -1) {
 			if len(match) > 2 {
-				civ.UImprovements = append(civ.UImprovements, CivAttribute{
+				civ.UImprovements = append(civ.UImprovements, Improvement{
 					Name:   strings.TrimSpace(match[1]),
 					Effect: strings.TrimSpace(match[2]),
 				})
@@ -110,7 +116,7 @@ func parseCivilizations(text string) []Civilization {
 		// Extract Buildings
 		for _, match := range buildingRegex.FindAllStringSubmatch(civBody, -1) {
 			if len(match) > 2 {
-				civ.UBuildings = append(civ.UBuildings, CivAttribute{
+				civ.UBuildings = append(civ.UBuildings, Building{
 					Name:   strings.TrimSpace(match[1]),
 					Effect: strings.TrimSpace(match[2]),
 				})
@@ -120,7 +126,7 @@ func parseCivilizations(text string) []Civilization {
 		// Extract Unique Units
 		for _, match := range unitRegex.FindAllStringSubmatch(civBody, -1) {
 			if len(match) > 2 {
-				civ.UUnits = append(civ.UUnits, CivAttribute{
+				civ.UUnits = append(civ.UUnits, Unit{
 					Name:   strings.TrimSpace(match[1]),
 					Effect: strings.TrimSpace(match[2]),
 				})

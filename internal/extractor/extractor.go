@@ -1,4 +1,4 @@
-package main
+package extractor
 
 import (
 	"context"
@@ -62,4 +62,18 @@ func (g *GoogleDoc) GetDocumentText() (string, error) {
 	}
 
 	return extractText(doc.Body.Content), nil
+}
+
+func extractText(elements []*docs.StructuralElement) string {
+	var text string
+	for _, elem := range elements {
+		if elem.Paragraph != nil {
+			for _, element := range elem.Paragraph.Elements {
+				if element.TextRun != nil {
+					text += element.TextRun.Content
+				}
+			}
+		}
+	}
+	return text
 }

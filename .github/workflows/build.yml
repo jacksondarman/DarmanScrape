@@ -35,7 +35,8 @@ jobs:
           check-latest: true
 
       - name: Install Go Dependencies
-        run: go get github.com/jacksondarman/lekscrape
+        run: go get ./...
+
 
       - name: Go Format
         run: gofmt -s -w . && git diff --exit-code

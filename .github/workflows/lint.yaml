@@ -25,7 +25,7 @@ jobs:
           check-latest: true
 
       - name: Install Go Dependencies
-        run: go get github.com/jacksondarman/lekscraper
+        run: go get github.com/jacksondarman/lekscrape
 
       - name: Lint
         uses: golangci/golangci-lint-action@v6.1.0

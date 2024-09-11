@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
 	"log"
@@ -45,7 +45,7 @@ const (
 
   - The function returns a slice of Civilization structs containing the extracted data.
 */
-func parseCivilizations(text string) []Civilization {
+func ParseCivilizations(text string) []Civilization {
 	// Regex to match each civilization block
 	civBlockRegex := regexp.MustCompile(`(?m)^([^\n]+- [^\n]+)\n((?:.*\n)*?)^Bias: (.*)$`)
 	blocks := civBlockRegex.FindAllStringSubmatch(text, -1)
